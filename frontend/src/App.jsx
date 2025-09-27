@@ -5,6 +5,7 @@ import LevelResultPage from "./pages/LevelResultPage.jsx";
 import LearningChoicePage from "./pages/LearningChoicePage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import ProblemPage from "./pages/ProblemPage.jsx";
+import ProblemPageResult from "./pages/ProblemPageResult.jsx";
 import LearningPage from "./pages/LearningPage.jsx";
 import Footer from "./components/Footer.jsx";
 
@@ -33,6 +34,7 @@ function App() {
         />
         <Route path="/LearningPage" element={<LearningPage />} />
         <Route path="/ProblemPage" element={<ProblemPage />} />
+        <Route path="/ProblemPageResult" elment={<ProblemPageResult/>} />
       </Routes>
 
       {/* 푸터 */}
