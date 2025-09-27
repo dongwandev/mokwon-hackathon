@@ -1,6 +1,7 @@
 // import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LevelPage from "./pages/LevelPage.jsx";
+import LevelResultPage from "./pages/LevelResultPage.jsx";
 import LearningChoicePage from "./pages/LearningChoicePage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import './App.css'
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/level" element={<LevelPage />} />
+        <Route path="/levelresult" element={<LevelResultPage />} />
         <Route path="/learningchoice" element={<LearningChoicePage />} />
         <Route path="/home" element={<HomePage />} />
         {/* 선택: 404 최소 대응 */}

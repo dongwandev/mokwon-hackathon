@@ -1,5 +1,6 @@
 // src/pages/LevelPage.jsx
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 const API_BASE = 'http://localhost:4000'; // .env 미사용
 
@@ -97,6 +98,8 @@ export default function LevelPage() {
     if (selectedIdx !== null) return; // 이미 선택했으면 무시
     const correct = options[optIdx]?.isCorrect === true;
 
+  const navigate = useNavigate();
+  const goToLevelResult = () => navigate("/levelresult");
     setSelectedIdx(optIdx);
     setWasCorrect(correct);
 
@@ -129,6 +132,9 @@ export default function LevelPage() {
 
     // 상태 리셋(선택 초기화)
     setSelectedIdx(null);
+    setQIndex((prev) => {
+      const next = prev + 1;
+      return next >= questions.length ? goToLevelResult() : next;
     setWasCorrect(null);
 
     // 이미 정답이면 correctCounts는 증가된 상태이므로 그 값을 기준으로 레벨 전환
