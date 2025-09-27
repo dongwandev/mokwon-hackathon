@@ -38,7 +38,7 @@ function splitDialogue(sentence) {
   }
 
   // 3) 문장부호 기준
-  const parts = s.split(/(?<=[\.!?…])\s+/).filter(Boolean);
+  const parts = s.split(/(?<=[.!?…])\s+/).filter(Boolean);
   if (parts.length >= 2) return [parts[0], parts[1]];
 
   // 4) 마지막 안전장치(반쯤 나눔)
@@ -189,10 +189,16 @@ export default function LearningPage() {
     return (
       <Container>
         <h2>학습 페이지</h2>
-        <div className="big-container">
-          <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 18 }}>
+        <div className="big-container" style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          gap: "20px",
+        }}>
+          <h1>
             학습을 완료하였습니다.
-          </p>
+          </h1>
           <div style={{ display: "flex", gap: 10 }}>
             <button
               className="btn btn-secondary"
@@ -231,7 +237,14 @@ export default function LearningPage() {
     <Container>
       <h2>학습 페이지</h2>
 
-      <div className="big-container">
+      <div
+        className="big-container"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+        }}
+      >
         {/* 문장1, 문장2, 답 — 각 줄 bold */}
         <p>
           <b>{view.line1}</b>
@@ -247,11 +260,28 @@ export default function LearningPage() {
         <p className="learn-translation">회화를 선택한 외국어로 번역해 출력</p>
       </div>
 
-      <div className="learn-actions-row">
+      <div
+        className="learn-actions-row"
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+        }}
+      >
         <button className="btn btn-primary" onClick={onNext}>
-          {index + 1 >= 10 ? "완료" : "다음 페이지"}
+          <h3>{index + 1 >= 10 ? "완료" : "다음 회화"}</h3>
         </button>
-        <span className="learn-progress">진행: {index + 1} / 10</span>
+        <strong
+          className="learn-progress"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "5px 10px",
+            borderRadius: "8px",
+            background: "#F0F0F0",
+          }}
+        >
+          진행: {index + 1} / 10
+        </strong>
       </div>
     </Container>
   );
