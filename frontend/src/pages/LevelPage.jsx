@@ -223,7 +223,14 @@ export default function LevelPage() {
 
   // 일반 화면
   if (loading)
-    return <main className="level-page">문제 생성 중… 잠시만요 ⏳</main>;
+    return (
+        <Container>
+            <div className='loading-area'>
+                <p>문제 생성 중… 잠시만요 ⏳</p>
+            </div>
+            
+        </Container>
+    );
   if (error)
     return <main className="level-page level-page--error">에러: {error}</main>;
   if (!current) return <main className="level-page">문제가 없습니다.</main>;
