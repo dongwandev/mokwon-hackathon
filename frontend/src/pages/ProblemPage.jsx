@@ -18,7 +18,7 @@ const ProblemPage = () => {
 
   return (
     <div className="p-10 max-w-xl mx-auto text-center">
-      <h2 className="text-2xl font-bold mb-6">🛠️ 관리자 문제 풀이</h2>
+      <h2 className="text-2xl font-bold mb-6">*초급* 다음 중 빈칸에 들어갈 단어로 옳바른 것을 고르시오</h2>
 
       <div className="bg-white p-6 rounded shadow">
         <p className="text-lg font-medium mb-4">{question.text}</p>
