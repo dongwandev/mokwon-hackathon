@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage.jsx";
 import ProblemPage from "./pages/ProblemPage.jsx";
 import ProblemPageResult from "./pages/ProblemPageResult.jsx";
 import LearningPage from "./pages/LearningPage.jsx";
+import AchievementPage from "./pages/AchievementPage.jsx";
 import Footer from "./components/Footer.jsx";
 
 function Home() {
@@ -35,6 +36,7 @@ function App() {
         <Route path="/LearningPage" element={<LearningPage />} />
         <Route path="/ProblemPage" element={<ProblemPage />} />
         <Route path="/ProblemPageResult" element={<ProblemPageResult/>} />
+        <Route path="/achievement" element={<AchievementPage />} />
       </Routes>
 
       {/* 푸터 */}

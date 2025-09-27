@@ -1,0 +1,118 @@
+:root {
+  --achv-border: rgba(0, 0, 0, 0.08);
+  --achv-card-bg: var(--card, #fff);
+  --achv-text: var(--text, #111827);
+  --achv-muted: rgba(0, 0, 0, 0.55);
+  --achv-shadow: var(--shadow, 0 6px 20px rgba(0,0,0,.06));
+  --achv-gold-400: #f59e0b;  /* 금색 */
+  --achv-gold-300: #facc15;  /* 금색 라이트 */
+}
+
+/* ▼ 컨테이너(.home-shell)의 자식이 스크롤러가 되도록 보정 (이 페이지에서만 로드됨) */
+.home-shell { min-height: 0; }
+
+/* 페이지 래퍼: 내부 스크롤 */
+.achv-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0 16px;
+  width: 100%;
+  box-sizing: border-box;
+
+  flex: 1;
+  min-height: 0;                  /* iOS Safari 스크롤 막힘 방지 */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+
+  /* 하단 탭/내비가 가리는 경우 여유 */
+  padding-bottom: var(--achv-bottom-gap, calc(112px + env(safe-area-inset-bottom)));
+}
+
+/* 헤더 */
+.achv-header { display: flex; flex-direction: column; gap: 4px; }
+.achv-title { font-size: 22px; font-weight: 800; color: var(--achv-text); letter-spacing: -0.2px; }
+.achv-subtitle { font-size: 12px; color: var(--achv-muted); }
+
+/* 목록: 가로 100% 세로 스택 */
+.achv-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+
+/* 카드 */
+.achv-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--achv-card-bg);
+  border: 1px solid var(--achv-border);
+  border-radius: 18px;
+  box-shadow: var(--achv-shadow);
+  padding: 16px;
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+.achv-card:hover { box-shadow: 0 10px 28px rgba(0,0,0,.08); transform: translateY(-1px); }
+
+/* 카드 상단 */
+.achv-card-top { display: flex; align-items: center; gap: 12px; }
+.achv-trophy-wrap {
+  display: grid; place-items: center; padding: 10px;
+  border-radius: 12px; border: 1px solid #e5e7eb;
+  background: #f3f4f6;     /* 기본: 회색 배경 */
+  color: #9ca3af;          /* 기본: 회색 아이콘 (currentColor) */
+}
+.achv-trophy { width: 30px; height: 30px; }
+
+.achv-meta { min-width: 0; }
+.achv-name {
+  margin: 0; font-size: 16px; font-weight: 700; color: var(--achv-text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.achv-sub { margin: 2px 0 0; font-size: 13px; color: var(--achv-muted); }
+.achv-percent { color: #374151; font-weight: 600; }
+
+/* 카드 하단 */
+.achv-card-bottom { margin-top: 12px; }
+
+/* 진행 바: --pct(예: "72%")를 그대로 폭으로 사용 */
+.achv-progress {
+  position: relative;
+  width: 100%;
+  height: 12px;
+  background: rgba(0,0,0,.07);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.achv-progress::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: var(--pct, 0%); /* ← 핵심: 퍼센트 문자열 사용 */
+  background: linear-gradient(90deg, var(--achv-gold-400), var(--achv-gold-300));
+  border-radius: inherit;
+  transition: width .7s ease-out;
+  will-change: width;
+}
+.achv-percent-label { margin-top: 4px; font-size: 11px; color: var(--achv-muted); text-align: right; }
+
+/* 100% 달성 시: 금색 트로피 */
+.achv-card[data-state="done"] .achv-trophy-wrap {
+  background: #fff7e6;
+  border-color: #fde68a;
+  color: var(--achv-gold-400);
+}
+
+/* 다크 모드 옵션 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --achv-border: rgba(255, 255, 255, 0.1);
+    --achv-card-bg: var(--card, #0b0c0f);
+    --achv-text: var(--text, #e5e7eb);
+    --achv-muted: rgba(229, 231, 235, 0.65);
+    --achv-shadow: 0 6px 22px rgba(0,0,0,.35);
+  }
+  .achv-progress { background: rgba(255,255,255,.12); }
+  .achv-percent { color: #e5e7eb; }
+}
+
+/* 안전장치: 레이아웃 넘침 방지 */
+.achv-page, .achv-list, .achv-card { max-width: 100%; }
