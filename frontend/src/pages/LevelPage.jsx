@@ -1,8 +1,27 @@
 function LevelPage() {
     return (
         <main style={{ padding: 16 }}>
-            <h1>Level</h1>
-            <p>여기는 /level 페이지</p>
+            <div>
+                <span>Q. 다음 중 정답은 무엇인가요?</span>
+            </div>
+            <div>
+                <div>
+                    <button>1번</button>
+                    <span>정답 1</span>
+                </div>
+                <div>
+                    <button>2번</button>
+                    <span>정답 2</span>
+                </div>
+                <div>
+                    <button>3번</button>
+                    <span>정답 3</span>
+                </div>
+                <div>
+                    <button>4번</button>
+                    <span>정답 4</span>
+                </div>
+            </div>
         </main>
     );
 }
