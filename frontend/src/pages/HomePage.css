@@ -9,31 +9,6 @@
   --tabbar-h: 64px;
 }
 
-/* 페이지 프레임(모바일 폭 제한 + 안전영역) */
-.home-page{
-  width: 100%;
-  height: calc(100vh - 84px);
-  display: flex;
-  justify-content: center;
-  padding: calc(16px + env(safe-area-inset-top)) 16px
-           calc(24px + env(safe-area-inset-bottom));
-  font-family: ui-sans-serif, system-ui, -apple-system, "Noto Sans KR", Roboto, Helvetica, Arial;
-  padding-bottom: 0;
-}
-
-/* ▶ 내부 단일 컨테이너: 외부 배경과 확실히 분리 */
-.home-shell{
-  width: 50vw;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 16px;
-  border: 1px solid var(--green-100);
-  border-radius: 22px;
-  background: var(--card);
-  box-shadow: var(--shadow);
-}
-
 /* 헤더 */
 .home-header{
   display:flex;
