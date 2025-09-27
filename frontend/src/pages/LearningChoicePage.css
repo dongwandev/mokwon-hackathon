@@ -16,21 +16,33 @@ body {
 }
 
 .select-container {
-  width: 100vw;
-  max-width: 400px;
-  aspect-ratio: 9 / 16;
+  /* ↓ 가로는 컨테이너 안에서 양쪽으로 꽉 차게 */
+  width: 100%;
+  box-sizing: border-box;
+
+  /* 여백 재조정: 위아래 마진을 없애 세로 가운데 정렬에 방해 안 되게 */
+  margin: 0;
+  padding: 2rem;
+
+  /* 배경/장식 유지 */
   background: linear-gradient(135deg, #f9fafb 0%, #fef9e7 100%);
-  /* 연한 하늘색 → 아주 연한 노란색 그라데이션 */
   position: relative;
   overflow: hidden;
-  margin: 2rem auto;
   border-radius: 24px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+
+  /* ↓ 세로 가운데 정렬 */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: center; /* 세로 중앙 */
   align-items: center;
+
+  /* ↓ 뷰포트 높이를 기준으로 가운데 오도록 최소 높이 보장 */
+
+  flex: 0 0 100%;
+
   z-index: 0;
+  margin-block: auto;
 }
 
 .select-container::before {
@@ -51,7 +63,7 @@ body {
   position: absolute;
   width: 400px;
   height: 400px;
-  background: rgba(249, 216, 73, 0.12); /* 노란색 투명도 약간 증가 */
+  background: rgba(249, 216, 73, 0.12);
   border-radius: 50%;
   bottom: -150px;
   right: -150px;
@@ -64,17 +76,7 @@ body {
   z-index: 1;
 }
 
-/* 선택 페이지 전체 컨테이너 */
-.select-container {
-  min-height: 100vh;
-  background-color: var(--bg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  gap: 2rem;
-}
+/* ★ 여기 있던 "선택 페이지 전체 컨테이너" 블록은 요구에 따라 제거됨 */
 
 /* 제목 */
 .select-title {
@@ -86,6 +88,7 @@ body {
 
 /* 버튼 박스 */
 .select-button-box {
+  margin-top: 1rem;
   display: flex;
   gap: 1.5rem;
   flex-wrap: wrap;

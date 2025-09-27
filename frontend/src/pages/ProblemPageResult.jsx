@@ -1,5 +1,6 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import Container from '../components/Container'
 
 const ResultPage = () => {
   const navigate = useNavigate()
@@ -11,12 +12,14 @@ const ResultPage = () => {
   // 잘못된 접근 대비
   if (total === 0) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <p>잘못된 접근입니다. 퀴즈를 먼저 풀어주세요.</p>
-        <button onClick={() => navigate('/')} style={buttonStyle}>
-          퀴즈 시작하기
-        </button>
-      </div>
+      <Container>
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          <p>잘못된 접근입니다. 퀴즈를 먼저 풀어주세요.</p>
+          <button onClick={() => navigate('/')} style={buttonStyle}>
+            퀴즈 시작하기
+          </button>
+        </div>
+      </Container>
     )
   }
 
@@ -24,15 +27,17 @@ const ResultPage = () => {
   const percentage = ((correct / total) * 100).toFixed(1)
 
   return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h2>퀴즈 결과</h2>
-      <p>총 문제 수: <strong>{total}</strong></p>
-      <p>맞춘 문제 수: <strong>{correct}</strong></p>
-      <p>정답률: <strong>{percentage}%</strong></p>
-      <button onClick={() => navigate('/')} style={buttonStyle}>
-        다시 풀기
-      </button>
-    </div>
+    <Container>
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <h2>퀴즈 결과</h2>
+        <p>총 문제 수: <strong>{total}</strong></p>
+        <p>맞춘 문제 수: <strong>{correct}</strong></p>
+        <p>정답률: <strong>{percentage}%</strong></p>
+        <button onClick={() => navigate('/')} style={buttonStyle}>
+          다시 풀기
+        </button>
+      </div>
+    </Container>
   )
 }
 
