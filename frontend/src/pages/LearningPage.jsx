@@ -1,11 +1,11 @@
 // src/pages/LearningPage.jsx
-import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Container from '../components/Container';
-import './pages.css';
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Container from "../components/Container";
+import "./pages.css";
 
-const API_BASE = 'http://localhost:4000';
+const API_BASE = "http://localhost:4000";
 
 // 간단 셔플
 function shuffle(arr) {
@@ -19,7 +19,7 @@ function shuffle(arr) {
 
 // sentence 2줄 + answer 한 줄로 보여주기 위한 안전한 분리
 function splitDialogue(sentence) {
-  if (!sentence || typeof sentence !== 'string') return ['', ''];
+  if (!sentence || typeof sentence !== "string") return ["", ""];
   const s = sentence.trim();
   // 1) 우선 줄바꿈 기준
   const byNl = s
@@ -51,8 +51,8 @@ export default function LearningPage() {
 
   // 로딩/에러
   const [loading, setLoading] = useState(true); // 생성+조회 전체 로딩
-  const [loadingStep, setLoadingStep] = useState('생성 중…'); // 단계 표시
-  const [error, setError] = useState('');
+  const [loadingStep, setLoadingStep] = useState("생성 중…"); // 단계 표시
+  const [error, setError] = useState("");
 
   // 학습 데이터 (최대 10개)
   const [items, setItems] = useState([]);
@@ -64,17 +64,17 @@ export default function LearningPage() {
     (async () => {
       try {
         setLoading(true);
-        setError('');
+        setError("");
 
         // 1) 생성 호출 (덮어쓰기)
-        setLoadingStep('문항 생성 중…');
+        setLoadingStep("문항 생성 중…");
         await axios.post(`${API_BASE}/api/generate-questions/dialog`, {
           perLevel: 10,
           replace: true,
         });
 
         // 2) 조회 (nocache=1)
-        setLoadingStep('문항 불러오는 중…');
+        setLoadingStep("문항 불러오는 중…");
         const res = await axios.get(`${API_BASE}/api/questions`, {
           params: { nocache: 1 },
         });
@@ -107,7 +107,7 @@ export default function LearningPage() {
         picked = picked.slice(0, 10);
 
         if (picked.length === 0) {
-          throw new Error('학습에 사용할 문장이 없습니다.');
+          throw new Error("학습에 사용할 문장이 없습니다.");
         }
 
         setItems(picked);
@@ -115,7 +115,7 @@ export default function LearningPage() {
         setDone(false);
       } catch (e) {
         console.error(e);
-        setError(e.response?.data?.error || e.message || '알 수 없는 오류');
+        setError(e.response?.data?.error || e.message || "알 수 없는 오류");
       } finally {
         setLoading(false);
       }
@@ -130,7 +130,7 @@ export default function LearningPage() {
     return {
       line1,
       line2,
-      answer: current.answer || '',
+      answer: current.answer || "",
     };
   }, [current]);
 
@@ -149,7 +149,11 @@ export default function LearningPage() {
       <Container>
         <h2>학습 페이지</h2>
         <div className="big-container">
-          <p>{loadingStep} 잠시만요 ⏳</p>
+          <h1>
+            {loadingStep}
+            <br />
+            잠시만 기다려주세요 ⏳
+          </h1>
         </div>
       </Container>
     );
@@ -160,7 +164,7 @@ export default function LearningPage() {
       <Container>
         <h2>학습 페이지</h2>
         <div className="big-container">
-          <p style={{ color: 'crimson', fontWeight: 700 }}>에러: {error}</p>
+          <p style={{ color: "crimson", fontWeight: 700 }}>에러: {error}</p>
           <p style={{ marginTop: 8 }}>
             관리자에게 문의하거나 새로 고침 후 다시 시도해 주세요.
           </p>
@@ -177,7 +181,7 @@ export default function LearningPage() {
           <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 18 }}>
             학습을 완료하였습니다.
           </p>
-          <div style={{ display: 'flex', gap: 10 }}>
+          <div style={{ display: "flex", gap: 10 }}>
             <button
               className="btn btn-secondary"
               onClick={() => {
@@ -190,7 +194,7 @@ export default function LearningPage() {
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => navigate('/home')}
+              onClick={() => navigate("/home")}
             >
               홈으로
             </button>
@@ -233,7 +237,7 @@ export default function LearningPage() {
 
       <div className="learn-actions-row">
         <button className="btn btn-primary" onClick={onNext}>
-          {index + 1 >= 10 ? '완료' : '다음 페이지'}
+          {index + 1 >= 10 ? "완료" : "다음 페이지"}
         </button>
         <span className="learn-progress">진행: {index + 1} / 10</span>
       </div>

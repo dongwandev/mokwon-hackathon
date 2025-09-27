@@ -235,7 +235,10 @@ export default function LevelPage() {
             flex: 1,
           }}
         >
-          <h1>문제 생성 중… 잠시만요 ⏳</h1>
+          <h1 style={{
+            textAlign: "center",
+            lineHeight: "2em",
+          }}>문제 생성 중…<br />잠시만 기다려주세요 ⏳</h1>
         </div>
       </Container>
     );
@@ -286,8 +289,8 @@ export default function LevelPage() {
                 disabled={selectedIdx !== null}
                 onChange={() => selectedIdx === null && onPick(idxOpt)}
               />
-              <label htmlFor={id} className="option option--label">
-                <span className="option-number">{number}번</span>
+              <label htmlFor={id} className="option option--label" id={wasCorrect ? "correct" : "incorrect"}>
+                <span className="option-number" id={wasCorrect ? "correct" : "incorrect"}>{number}번</span>
                 <span className="option-text">{opt.text}</span>
               </label>
             </div>
