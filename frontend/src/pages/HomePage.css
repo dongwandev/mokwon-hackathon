@@ -9,24 +9,21 @@
   --tabbar-h: 64px;
 }
 
-/* 페이지 외부 배경 */
-body{
-  background: linear-gradient(180deg, var(--green-25), #ffffff 60%);
-}
-
 /* 페이지 프레임(모바일 폭 제한 + 안전영역) */
 .home-page{
-  max-width: 420px;
-  min-height: 100svh;
-  margin: 0 auto;
+  width: 100%;
+  height: calc(100vh - 84px);
+  display: flex;
+  justify-content: center;
   padding: calc(16px + env(safe-area-inset-top)) 16px
            calc(24px + env(safe-area-inset-bottom));
   font-family: ui-sans-serif, system-ui, -apple-system, "Noto Sans KR", Roboto, Helvetica, Arial;
-  padding-bottom: calc(var(--tabbar-h) + 20px + env(safe-area-inset-bottom));
+  padding-bottom: 0;
 }
 
 /* ▶ 내부 단일 컨테이너: 외부 배경과 확실히 분리 */
 .home-shell{
+  width: 50vw;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -77,17 +74,9 @@ body{
   /* 하단 안전영역(아이폰 노치) + 내측 여백 */
   padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
 
-  /* 배경을 살짝 깔아 콘텐츠와 분리 (투명→흰색 그라데이션) */
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.85) 35%, rgba(255,255,255,.95) 100%);
-
-  /* 사파리 스크롤 시 상태바 겹침 방지 */
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
 }
 
 .home-bottomnav .menu-nav{
-  max-width: 420px;      /* .home-page의 폭과 동일하게 맞춤 */
   height: var(--tabbar-h);
   margin: 0 auto;
   display: flex;
@@ -124,7 +113,6 @@ body{
   .home-bottomnav .menu-item a:hover{ transform:none; }
 }
 .home-bottomnav .menu-item a.is-active{
-  background: linear-gradient(180deg, var(--green-500), var(--green-600));
   color:#fff;
   box-shadow:0 8px 18px rgba(34,197,94,.35);
 }
