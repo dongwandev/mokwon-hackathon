@@ -1,10 +1,10 @@
 // src/pages/LevelPage.jsx
-import { useEffect, useMemo, useState } from "react";
-// import { useNavigate } from "react-router-dom"; // (현재 페이지 내 네비게이션 사용 안 함)
-import "./LevelPage.css";
-import Container from "../components/Container";
+import { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import './LevelPage.css';
+import Container from '../components/Container';
 
-const API_BASE = "http://localhost:4000"; // .env 미사용
+const API_BASE = 'http://localhost:4000'; // .env 미사용
 
 // Fisher–Yates 셔플
 function shuffle(arr) {
@@ -16,12 +16,12 @@ function shuffle(arr) {
   return a;
 }
 
-const LEVELS = ["beginner", "intermediate", "advanced"];
+const LEVELS = ['beginner', 'intermediate', 'advanced'];
 
 export default function LevelPage() {
   // 로딩/에러
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   // 문제 뱅크
   const [bank, setBank] = useState({
@@ -31,7 +31,7 @@ export default function LevelPage() {
   });
 
   // 진행 상태
-  const [level, setLevel] = useState("beginner");
+  const [level, setLevel] = useState('beginner');
   const [idx, setIdx] = useState({ beginner: 0, intermediate: 0, advanced: 0 });
   const [correctCounts, setCorrectCounts] = useState({
     beginner: 0,
@@ -45,19 +45,29 @@ export default function LevelPage() {
   const [selectedIdx, setSelectedIdx] = useState(null);
   const [wasCorrect, setWasCorrect] = useState(null);
 
-  // const navigate = useNavigate();
-  // (과거 로직에서 사용하던 questions/qIndex 제거)
-
-  // 초기 로드
+  // 초기 로드: 1) 문제 생성(덮어쓰기) → 2) 최신 questions.json 조회
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
-        setError("");
+        setError('');
 
-        const res = await fetch(`${API_BASE}/api/questions`);
-        if (!res.ok) throw new Error("문제 로드 실패");
-        const data = await res.json();
+        // 1) OpenAI 기반 문제 생성(API: replace=true, perLevel=10)
+        try {
+          await axios.post(`${API_BASE}/api/generate-questions/prompt`, {
+            replace: true,
+            perLevel: 10,
+          });
+        } catch (genErr) {
+          // 생성이 실패해도 기존 파일이 있을 수 있으니, 조회는 시도
+          console.warn('문제 생성 실패, 기존 데이터로 진행 시도:', genErr);
+        }
+
+        // 2) 최신 questions.json 조회 (nocache=1로 강제 무효화)
+        const res = await axios.get(`${API_BASE}/api/questions`, {
+          params: { nocache: 1 },
+        });
+        const data = res.data;
 
         // 각 레벨 문제 셔플
         const nextBank = {
@@ -65,10 +75,21 @@ export default function LevelPage() {
           intermediate: shuffle(data.intermediate || []),
           advanced: shuffle(data.advanced || []),
         };
+        // 비어있으면 에러
+        if (
+          nextBank.beginner.length === 0 &&
+          nextBank.intermediate.length === 0 &&
+          nextBank.advanced.length === 0
+        ) {
+          throw new Error(
+            '문제 데이터가 비어 있습니다. 관리자에게 문의하세요.'
+          );
+        }
+
         setBank(nextBank);
 
         // 상태 초기화
-        setLevel("beginner");
+        setLevel('beginner');
         setIdx({ beginner: 0, intermediate: 0, advanced: 0 });
         setCorrectCounts({ beginner: 0, intermediate: 0, advanced: 0 });
         setAskedCount(0);
@@ -77,7 +98,7 @@ export default function LevelPage() {
         setWasCorrect(null);
       } catch (e) {
         console.error(e);
-        setError(e.message || "알 수 없는 오류");
+        setError(e.message || '알 수 없는 오류');
       } finally {
         setLoading(false);
       }
@@ -114,9 +135,9 @@ export default function LevelPage() {
 
   // 레벨 전환 규칙
   const decideNextLevel = (curLevel, counts) => {
-    if (curLevel === "beginner" && counts.beginner >= 3) return "intermediate";
-    if (curLevel === "intermediate" && counts.intermediate >= 3)
-      return "advanced";
+    if (curLevel === 'beginner' && counts.beginner >= 3) return 'intermediate';
+    if (curLevel === 'intermediate' && counts.intermediate >= 3)
+      return 'advanced';
     return curLevel; // advanced는 유지
   };
 
@@ -150,25 +171,22 @@ export default function LevelPage() {
         return { ...prevIdx, [nextLevel]: nextVal };
       });
 
-      const newAskedCount = askedCount + 1;
-      setAskedCount(newAskedCount);
+      // askedCount는 함수형 업데이트로 안전하게 증가
+      setAskedCount((c) => c + 1);
       return prevCounts;
     });
-
-    // (기존 qIndex/questions 기반 네비게이션 제거)
   };
 
   // 최종 레벨 계산: “정답 3개가 넘어간 단계”
   const finalLevel = useMemo(() => {
-    if (correctCounts.advanced >= 3) return "advanced";
-    if (correctCounts.intermediate >= 3) return "intermediate";
-    if (correctCounts.beginner >= 3) return "beginner";
-    return "beginner"; // 아무 것도 3 미만이면 기본값
+    if (correctCounts.advanced >= 3) return 'advanced';
+    if (correctCounts.intermediate >= 3) return 'intermediate';
+    if (correctCounts.beginner >= 3) return 'beginner';
+    return 'beginner'; // 아무 것도 3 미만이면 기본값
   }, [correctCounts]);
 
   // 리스타트
   const onRestart = () => {
-    // 전체를 새로 로드(간단)
     window.location.reload();
   };
 
@@ -190,13 +208,13 @@ export default function LevelPage() {
         </ul>
 
         <div className="result-final">
-          최종 레벨:{" "}
+          최종 레벨:{' '}
           <b>
-            {finalLevel === "beginner"
-              ? "초급"
-              : finalLevel === "intermediate"
-              ? "중급"
-              : "고급"}
+            {finalLevel === 'beginner'
+              ? '초급'
+              : finalLevel === 'intermediate'
+              ? '중급'
+              : '고급'}
           </b>
         </div>
 
@@ -210,11 +228,10 @@ export default function LevelPage() {
   }
 
   // 일반 화면
-  if (loading) return <main className="level-page">불러오는 중…</main>;
+  if (loading)
+    return <main className="level-page">문제 생성 중… 잠시만요 ⏳</main>;
   if (error)
-    return (
-      <main className="level-page level-page--error">에러: {error}</main>
-    );
+    return <main className="level-page level-page--error">에러: {error}</main>;
   if (!current) return <main className="level-page">문제가 없습니다.</main>;
 
   return (
@@ -223,7 +240,7 @@ export default function LevelPage() {
         <h2 className="level-title">Q. 다음 중 정답은 무엇인가요?</h2>
         <small className="level-meta">
           현재 레벨: <b>{level}</b> / 정답 B:{correctCounts.beginner} · I:
-          {correctCounts.intermediate} · A:{correctCounts.advanced} / 진행{" "}
+          {correctCounts.intermediate} · A:{correctCounts.advanced} / 진행{' '}
           {askedCount}/10
         </small>
       </header>
@@ -236,13 +253,18 @@ export default function LevelPage() {
           const chosen = selectedIdx === idxOpt;
 
           // 상태에 따른 클래스(배경색)
-          let stateClass = "";
+          let stateClass = '';
           if (selectedIdx !== null && chosen) {
-            stateClass = opt.isCorrect ? "option--correct" : "option--incorrect";
+            stateClass = opt.isCorrect
+              ? 'option--correct'
+              : 'option--incorrect';
           }
 
           return (
-            <div key={`${opt.text}-${idxOpt}`} className={`option ${stateClass}`}>
+            <div
+              key={`${opt.text}-${idxOpt}`}
+              className={`option ${stateClass}`}
+            >
               <button
                 onClick={() => onPick(idxOpt)}
                 disabled={selectedIdx !== null}
@@ -258,7 +280,7 @@ export default function LevelPage() {
 
       {selectedIdx !== null && (
         <div className="feedback">
-          {wasCorrect ? "✅ 정답입니다!" : "❌ 오답입니다."}
+          {wasCorrect ? '✅ 정답입니다!' : '❌ 오답입니다.'}
         </div>
       )}
 
@@ -268,7 +290,7 @@ export default function LevelPage() {
           disabled={selectedIdx === null}
           className="btn btn-next"
         >
-          {askedCount === 9 ? "결과 보기" : "다음 문제"}
+          {askedCount === 9 ? '결과 보기' : '다음 문제'}
         </button>
       </div>
     </Container>
