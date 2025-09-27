@@ -7,11 +7,15 @@ const LABELS = ["홈", "학습", "분석", "업적"];
 const INDEX_TO_PATH = {
   0: "/home",
   1: "/learningchoice",
+  2: "/analysis",
+  3: "/achievement",
 };
 
 const PATH_TO_INDEX = {
   "/home": 0,
   "/learningchoice": 1,
+  "/analysis": 2,
+  "/achievement": 3,
 };
 
 export default function Footer({ onChange, activeIndex = 0 }) {
@@ -24,6 +28,8 @@ export default function Footer({ onChange, activeIndex = 0 }) {
     // 경로 변형 대비(트레일링 슬래시나 쿼리 등) - startsWith로 유연 처리
     (pathname.startsWith("/home") ? 0 :
      pathname.startsWith("/learningchoice") ? 1 :
+      pathname.startsWith("/analysis") ? 2 :
+     pathname.startsWith("/achievement") ? 3 :
      null);
 
   const effectiveActiveIndex =
