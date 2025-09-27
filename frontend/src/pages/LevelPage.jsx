@@ -1,8 +1,12 @@
+import './pages.css';
+
 function LevelPage() {
     return (
         <main style={{ padding: 16 }}>
             <div>
-                <span>Q. 다음 중 정답은 무엇인가요?</span>
+                <span>Q. 다음 중 정답은</span>
+                <span className="space" aria-hidden="true"></span>
+                <span> 무엇인가요?</span>
             </div>
             <div>
                 <div>
@@ -23,7 +27,7 @@ function LevelPage() {
                 </div>
             </div>
             <div>
-                <p>정답입니다.</p>
+                <p className="hidden">정답입니다.</p>
                 <button>다음문제</button>
             </div>
         </main>
