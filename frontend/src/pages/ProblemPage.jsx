@@ -111,7 +111,7 @@ const QuizWithExplanation = () => {
       setCurrentIdx(currentIdx + 1)
     } else {
       // 정답률 페이지로 이동
-      navigate('/result', { state: { total: questions.length, correct: correctCount } })
+      navigate('/ProblemPageResult', { state: { total: questions.length, correct: correctCount } })
     }
   }
 
