@@ -250,3 +250,12 @@ button:focus-visible{
   .option-btn{ min-width:58px; height:38px; }
   .level-question{ font-size: 17px; }
 }
+
+.loading-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 75vh;
+    font-weight: bold;
+    font-size: 20px;
+}
