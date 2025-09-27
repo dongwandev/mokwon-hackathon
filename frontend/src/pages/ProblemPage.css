@@ -209,3 +209,31 @@ button:focus-visible {
   .option-number { min-width: 58px; height: 38px; }
   .quiz-question { font-size: 17px; }
 }
+
+/* ── 선택 시각화 + 상태 배지 (최소 변경) ───────────────────────── */
+.option-radio:checked + .option--label {
+  background: var(--green-50);
+  border-color: var(--green-400);
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.18);
+}
+
+/* 선택된 번호 칩 강화 */
+.option-radio:checked + .option--label .option-number {
+  background: linear-gradient(180deg, var(--green-500), var(--green-600));
+  color: #fff;
+  border-color: var(--green-400);
+}
+
+/* 라벨 오른쪽에 가벼운 "선택됨" 배지 표시 */
+.option-radio:checked + .option--label::after {
+  content: '선택됨';
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 800;
+  color: #065f46;
+  background: var(--green-100);
+  border: 1px solid var(--green-200);
+  padding: 4px 8px;
+  border-radius: 999px;
+  line-height: 1;
+}
