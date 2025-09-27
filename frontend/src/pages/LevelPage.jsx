@@ -22,6 +22,10 @@ function LevelPage() {
                     <span>정답 4</span>
                 </div>
             </div>
+            <div>
+                <p>정답입니다.</p>
+                <button>다음문제</button>
+            </div>
         </main>
     );
 }
