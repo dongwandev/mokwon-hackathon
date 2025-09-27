@@ -27,7 +27,7 @@ export default function Footer({ onChange, activeIndex = 0 }) {
     PATH_TO_INDEX[pathname] ??
     // 경로 변형 대비(트레일링 슬래시나 쿼리 등) - startsWith로 유연 처리
     (pathname.startsWith("/home") ? 0 :
-     pathname.startsWith("/learningchoice") ? 1 :
+     pathname.startsWith("/learningchoice") || pathname.startsWith("/LearningPage") || pathname.startsWith("/ProblemPage") ? 1 :
       pathname.startsWith("/analysis") ? 2 :
      pathname.startsWith("/achievement") ? 3 :
      null);
