@@ -1,5 +1,5 @@
-// src/pages/LevelPage.jsx
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './LevelPage.css';
 import Container from '../components/Container';
@@ -19,6 +19,8 @@ function shuffle(arr) {
 const LEVELS = ['beginner', 'intermediate', 'advanced'];
 
 export default function LevelPage() {
+  const navigate = useNavigate();
+
   // 로딩/에러
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -181,8 +183,8 @@ export default function LevelPage() {
     return 'beginner';
   }, [correctCounts]);
 
-  // 리스타트
-  const onRestart = () => window.location.reload();
+  // 홈으로 이동
+  const goHome = () => navigate('/home');
 
   // 결과 화면
   if (!loading && !error && askedCount >= 10) {
@@ -213,8 +215,8 @@ export default function LevelPage() {
         </div>
 
         <div className="actions">
-          <button onClick={onRestart} className="btn btn-restart">
-            다시 시작
+          <button onClick={goHome} className="btn btn-restart">
+            홈으로
           </button>
         </div>
       </main>
