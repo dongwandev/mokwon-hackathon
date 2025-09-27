@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LevelPage from "./pages/LevelPage.jsx";
 import LearningChoicePage from "./pages/LearningChoicePage.jsx";
 import './App.css'
+import ProblemPage from "./pages/ProblemPage.jsx";
 
 function Home() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/learningchoice" element={<LearningChoicePage />} />
         {/* 선택: 404 최소 대응 */}
         <Route path="*" element={<div style={{ padding: 16 }}>Not Found</div>} />
+        <Route path="/ProblemPage" element={<ProblemPage/>}/>
       </Routes>
     </BrowserRouter>
   );
