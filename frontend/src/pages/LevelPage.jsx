@@ -43,6 +43,11 @@ export default function LevelPage() {
   const [selectedIdx, setSelectedIdx] = useState(null);
   const [wasCorrect, setWasCorrect] = useState(null);
 
+  const navigate = useNavigate();
+  const [questions, setQuestions] = useState([]); // 현재 레벨 문제 목록
+  const [qIndex, setQIndex] = useState(0); // 현재 문제 인덱스
+
+
   // 초기 로드
   useEffect(() => {
     (async () => {
@@ -93,13 +98,13 @@ export default function LevelPage() {
     return shuffle(merged);
   }, [current]);
 
+  const goToLevelResult = () => navigate("/levelresult");
+
   // 보기 선택 시 처리
   const onPick = (optIdx) => {
     if (selectedIdx !== null) return; // 이미 선택했으면 무시
     const correct = options[optIdx]?.isCorrect === true;
 
-  const navigate = useNavigate();
-  const goToLevelResult = () => navigate("/levelresult");
     setSelectedIdx(optIdx);
     setWasCorrect(correct);
 
@@ -132,9 +137,11 @@ export default function LevelPage() {
 
     // 상태 리셋(선택 초기화)
     setSelectedIdx(null);
+
     setQIndex((prev) => {
       const next = prev + 1;
       return next >= questions.length ? goToLevelResult() : next;
+    });
     setWasCorrect(null);
 
     // 이미 정답이면 correctCounts는 증가된 상태이므로 그 값을 기준으로 레벨 전환
