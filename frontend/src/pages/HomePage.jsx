@@ -26,26 +26,30 @@ function HomePage() {
       </header>
 
       <section className="home-card">
-        <p className="home-paragraph">🎶학습목표 및 업데이트</p>
+        <p className="home-paragraph" style={{ marginTop: '1rem', marginBottom: '1.5rem' }}>🎶학습목표 및 업데이트</p>
 
-        {/* 추천 메시지 박스 */}
-        <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#e6fffa', borderRadius: '8px', border: '1px solid #00c7b1' }}>
-          <h3>학습 추천</h3>
-          <p style={{ fontWeight: 'bold', margin: 0 }}>{recommendation.message}</p>
-        </div>
+        {/* 학습추천과 업데이트 공지사항 박스를 감싸는 flex 컨테이너 */}
+        <section className="home-flex-container">
+  {/* 학습 추천 박스 */}
+  <div>
+    <h3>학습 추천</h3>
+    <p style={{ fontWeight: 'bold', margin: 0 }}>{recommendation.message}</p>
+  </div>
 
-        {/* 업데이트 및 공지사항 박스 */}
-        <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#fff8dc', borderRadius: '8px', border: '1px solid #ffcc00' }}>
-          <h3>업데이트 및 공지사항</h3>
-          <ul style={{ paddingLeft: '1.2rem' }}>
-            {announcements.map(({ id, title, date, content }) => (
-              <li key={id} style={{ marginBottom: '1rem' }}>
-                <strong>{title}</strong> <em>({date})</em>
-                <p style={{ margin: '0.3rem 0 0 0' }}>{content}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
+  {/* 업데이트 및 공지사항 박스 */}
+  <div>
+    <h3>업데이트 및 공지사항</h3>
+    <ul style={{ paddingLeft: '1.2rem', marginTop: '0.5rem' }}>
+      {announcements.map(({ id, title, date, content }) => (
+        <li key={id} style={{ marginBottom: '1rem' }}>
+          <strong>{title}</strong> <em>({date})</em>
+          <p style={{ margin: '0.3rem 0 0 0' }}>{content}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
       </section>
     </Container>
   );
