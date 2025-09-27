@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 // .env 안 씀: 하드코딩
 const API_BASE = 'http://localhost:4000';
@@ -74,11 +75,14 @@ export default function LevelPage() {
   const isCorrect =
     selectedIdx !== null ? options[selectedIdx]?.isCorrect === true : null;
 
-  const onNext = () => {
+  const navigate = useNavigate();
+  const goToLevelResult = () => navigate("/levelresult");
+  
+    const onNext = () => {
     setSelectedIdx(null);
     setQIndex((prev) => {
       const next = prev + 1;
-      return next >= questions.length ? 0 : next; // 마지막이면 처음으로(데모용)
+      return next >= questions.length ? goToLevelResult() : next;
     });
   };
 
