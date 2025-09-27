@@ -85,10 +85,10 @@ const QuizWithExplanation = () => {
   const [correctCount, setCorrectCount] = useState(0)
 
   useEffect(() => {
-    setShuffledOptions(shuffleArray(questions[currentIdx].options))
-    setSelectedIndex(null)
-    setShowExplanation(false)
-  }, [currentIdx])
+  setShuffledOptions(questions[currentIdx].options)
+  setSelectedIndex(null)
+  setShowExplanation(false)
+}, [currentIdx])
 
   const currentQuestion = questions[currentIdx]
   const correctAnswer = currentQuestion.options[currentQuestion.correctIndex]
