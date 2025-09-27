@@ -1,0 +1,110 @@
+/* 공통 레이아웃 */
+.level-page {
+  padding: 16px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.level-page--error {
+  color: crimson;
+}
+
+/* 헤더/텍스트 */
+.level-header {
+  margin-bottom: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.level-title {
+  margin: 0;
+}
+
+.level-meta {
+  color: #6b7280;
+}
+
+.level-question {
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+/* 옵션 리스트 */
+.options {
+  display: grid;
+  gap: 8px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f3f4f6; /* 기본 */
+  border: 1px solid #e5e7eb;
+}
+
+/* 선택 + 정오 표시 */
+.option--correct {
+  background: #d1fae5; /* 초록 */
+}
+
+.option--incorrect {
+  background: #fee2e2; /* 빨강 */
+}
+
+.option-btn {
+  width: 48px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  cursor: pointer;
+}
+
+.option-btn:disabled {
+  cursor: default;
+}
+
+.option-text {
+  font-size: 16px;
+}
+
+/* 피드백 */
+.feedback {
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+/* 액션 영역 & 버튼 */
+.actions {
+  margin-top: 16px;
+}
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+/* 다음/결과 버튼(파랑) */
+.btn-next {
+  border-color: #2563eb;
+  background: #3b82f6;
+}
+
+.btn-next:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+/* 다시 시작 버튼(초록) */
+.btn-restart {
+  border-color: #10b981;
+  background: #10b981;
+}

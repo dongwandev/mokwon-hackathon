@@ -1,6 +1,7 @@
 // src/pages/LevelPage.jsx
 import { useEffect, useMemo, useState } from "react";
 // import { useNavigate } from "react-router-dom"; // (현재 페이지 내 네비게이션 사용 안 함)
+import "./LevelPage.css";
 
 const API_BASE = "http://localhost:4000"; // .env 미사용
 
@@ -133,7 +134,6 @@ export default function LevelPage() {
 
     // 상태 리셋(선택 초기화)
     setSelectedIdx(null);
-
     setWasCorrect(null);
 
     // 이미 정답이면 correctCounts는 증가된 상태이므로 그 값을 기준으로 레벨 전환
@@ -174,18 +174,21 @@ export default function LevelPage() {
   // 결과 화면
   if (!loading && !error && askedCount >= 10) {
     return (
-      <main style={{ padding: 16, maxWidth: 720, margin: "0 auto" }}>
-        <h2 style={{ marginTop: 0 }}>테스트 결과</h2>
-        <div style={{ marginBottom: 12, fontSize: 16 }}>
+      <main className="level-page">
+        <h2 className="level-title">테스트 결과</h2>
+
+        <div className="result-summary">
           총 10문제 중 <b>{totalCorrect}</b>개 정답
         </div>
-        <div style={{ marginBottom: 8 }}>레벨별 정답:</div>
-        <ul>
+
+        <div className="result-subtitle">레벨별 정답:</div>
+        <ul className="result-list">
           <li>초급: {correctCounts.beginner}</li>
           <li>중급: {correctCounts.intermediate}</li>
           <li>고급: {correctCounts.advanced}</li>
         </ul>
-        <div style={{ marginTop: 12, fontSize: 18 }}>
+
+        <div className="result-final">
           최종 레벨:{" "}
           <b>
             {finalLevel === "beginner"
@@ -196,18 +199,8 @@ export default function LevelPage() {
           </b>
         </div>
 
-        <div style={{ marginTop: 16 }}>
-          <button
-            onClick={onRestart}
-            style={{
-              padding: "10px 14px",
-              borderRadius: 8,
-              border: "1px solid #10b981",
-              background: "#10b981",
-              color: "#fff",
-              cursor: "pointer",
-            }}
-          >
+        <div className="actions">
+          <button onClick={onRestart} className="btn btn-restart">
             다시 시작
           </button>
         </div>
@@ -216,97 +209,63 @@ export default function LevelPage() {
   }
 
   // 일반 화면
-  if (loading) return <main style={{ padding: 16 }}>불러오는 중…</main>;
+  if (loading) return <main className="level-page">불러오는 중…</main>;
   if (error)
-    return <main style={{ padding: 16, color: "crimson" }}>에러: {error}</main>;
-  if (!current) return <main style={{ padding: 16 }}>문제가 없습니다.</main>;
+    return (
+      <main className="level-page level-page--error">에러: {error}</main>
+    );
+  if (!current) return <main className="level-page">문제가 없습니다.</main>;
 
   return (
-    <main style={{ padding: 16, maxWidth: 720, margin: "0 auto" }}>
-      <header
-        style={{
-          marginBottom: 12,
-          display: "flex",
-          gap: 12,
-          alignItems: "baseline",
-          flexWrap: "wrap",
-        }}
-      >
-        <h2 style={{ margin: 0 }}>Q. 다음 중 정답은 무엇인가요?</h2>
-        <small style={{ color: "#6b7280" }}>
+    <main className="level-page">
+      <header className="level-header">
+        <h2 className="level-title">Q. 다음 중 정답은 무엇인가요?</h2>
+        <small className="level-meta">
           현재 레벨: <b>{level}</b> / 정답 B:{correctCounts.beginner} · I:
           {correctCounts.intermediate} · A:{correctCounts.advanced} / 진행{" "}
           {askedCount}/10
         </small>
       </header>
 
-      <div style={{ marginBottom: 12, fontSize: 18 }}>
-        문제: {current.sentence}
-      </div>
+      <div className="level-question">문제: {current.sentence}</div>
 
-      <div style={{ display: "grid", gap: 8 }}>
+      <div className="options">
         {options.map((opt, idxOpt) => {
           const number = idxOpt + 1;
           const chosen = selectedIdx === idxOpt;
-          const bg =
-            selectedIdx === null
-              ? "#f3f4f6"
-              : chosen
-              ? opt.isCorrect
-                ? "#d1fae5"
-                : "#fee2e2"
-              : "#f3f4f6";
+
+          // 상태에 따른 클래스(배경색)
+          let stateClass = "";
+          if (selectedIdx !== null && chosen) {
+            stateClass = opt.isCorrect ? "option--correct" : "option--incorrect";
+          }
+
           return (
-            <div
-              key={`${opt.text}-${idxOpt}`}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "10px 12px",
-                borderRadius: 8,
-                background: bg,
-                border: "1px solid #e5e7eb",
-              }}
-            >
+            <div key={`${opt.text}-${idxOpt}`} className={`option ${stateClass}`}>
               <button
                 onClick={() => onPick(idxOpt)}
                 disabled={selectedIdx !== null}
-                style={{
-                  width: 48,
-                  height: 36,
-                  borderRadius: 8,
-                  border: "1px solid #d1d5db",
-                  background: "#fff",
-                  cursor: selectedIdx === null ? "pointer" : "default",
-                }}
+                className="option-btn"
               >
                 {number}번
               </button>
-              <span style={{ fontSize: 16 }}>{opt.text}</span>
+              <span className="option-text">{opt.text}</span>
             </div>
           );
         })}
       </div>
 
       {selectedIdx !== null && (
-        <div style={{ marginTop: 12, fontWeight: 600 }}>
+        <div className="feedback">
           {wasCorrect ? "✅ 정답입니다!" : "❌ 오답입니다."}
         </div>
       )}
 
-      <div style={{ marginTop: 16 }}>
+      <div className="actions">
         <button
           onClick={onNext}
           disabled={selectedIdx === null}
-          style={{
-            padding: "10px 14px",
-            borderRadius: 8,
-            border: "1px solid #2563eb",
-            background: selectedIdx === null ? "#93c5fd" : "#3b82f6",
-            color: "#fff",
-            cursor: selectedIdx === null ? "not-allowed" : "pointer",
-          }}
+          className="btn btn-next"
         >
           {askedCount === 9 ? "결과 보기" : "다음 문제"}
         </button>
