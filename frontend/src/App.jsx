@@ -5,6 +5,7 @@ import LearningChoicePage from "./pages/LearningChoicePage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import './App.css'
 import ProblemPage from "./pages/ProblemPage.jsx";
+import LearningPage from "./pages/LearningPage.jsx";
 
 function Home() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         {/* 선택: 404 최소 대응 */}
         <Route path="*" element={<div style={{ padding: 16 }}>Not Found</div>} />
+        <Route path="/LearningPage" element={<LearningPage/>}/>
         <Route path="/ProblemPage" element={<ProblemPage/>}/>
       </Routes>
     </BrowserRouter>

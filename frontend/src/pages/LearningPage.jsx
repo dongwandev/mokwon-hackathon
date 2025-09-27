@@ -1,10 +1,20 @@
-const UserPage = () => {
+import "./pages.css"
+
+const LearningPage = () => {
   return (
-    <div className="p-10 text-center">
-      <h2 className="text-2xl font-bold mb-4">👤 사용자 페이지</h2>
-      <p>일반 사용자 전용 기능을 확인할 수 있어요.</p>
+    <div>
+      <h2>학습 페이지</h2>
+
+      {/* 거대한 컨테이너로 감싸기 */}
+      <div className="big-container">
+        <p>학습 내용입니다.</p>
+      </div>
+      <div>
+        <button>다음 페이지</button>
+      </div>
+      
     </div>
   )
 }
 
-export default UserPage
+export default LearningPage
