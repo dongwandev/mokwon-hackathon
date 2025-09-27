@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 // import { useNavigate } from "react-router-dom"; // (현재 페이지 내 네비게이션 사용 안 함)
 import "./LevelPage.css";
+import Container from "../components/Container";
 
 const API_BASE = "http://localhost:4000"; // .env 미사용
 
@@ -217,7 +218,7 @@ export default function LevelPage() {
   if (!current) return <main className="level-page">문제가 없습니다.</main>;
 
   return (
-    <main className="level-page">
+    <Container>
       <header className="level-header">
         <h2 className="level-title">Q. 다음 중 정답은 무엇인가요?</h2>
         <small className="level-meta">
@@ -270,6 +271,6 @@ export default function LevelPage() {
           {askedCount === 9 ? "결과 보기" : "다음 문제"}
         </button>
       </div>
-    </main>
+    </Container>
   );
 }
