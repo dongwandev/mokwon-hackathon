@@ -1,133 +1,160 @@
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const quizData = [
+const questions = [
+  // 위 문제들 동일하게 복사
   {
-    text: "나는__을 하고있다",
-    choices: ["집", "게임", "피", "컴퓨터"],
-    answer: 1
+    question: '123',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 1,
+    explanation: '정답은 2번',
   },
   {
-    text: "나는__을 먹는다",
-    choices: ["집", "체스", "피자", "컴퓨터"],
-    answer: 2
+    question: '234',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 0,
+    explanation: '',
   },
   {
-    text: "나는__을 입고있다",
-    choices: ["치킨", "컴퓨터", "책상", "셔츠"],
-    answer: 3
+    question: '234',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 0,
+    explanation: '',
   },
   {
-    text: "__는 노랗다",
-    choices: ["바나나", "사과", "단풍잎", "콜라"],
-    answer: 0
+    question: '234',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 0,
+    explanation: '',
   },
   {
-    text: "바다에서 물고기를 잡을때 타는 배는?",
-    choices: ["어선 또는 낚시배", "화물선", "유조선", "예인선"],
-    answer: 0
+    question: '234',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 0,
+    explanation: '',
   },
   {
-    text: "목이 아플때 가는 병원은?",
-    choices: ["정형외과", "외과", "이비인후과", "안과"],
-    answer: 2
+    question: '234',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 0,
+    explanation: '',
   },
   {
-    text: "한국에서 일반적으로 랩탑을 의미하는 말로 적절한것은? ",
-    choices: ["컴퓨터", "휴대폰", "노트북", "자동차"],
-    answer: 2
+    question: '234',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 0,
+    explanation: '',
   },
   {
-    text: "다음중 현재진행형 문장을 고르시오",
-    choices: ["나는 밥을 먹었다", "나는 밥을 먹는중이다", "나는 밥을 먹을것이다", "나는 밥을 먹었었다"],
-    answer: 1
+    question: '234',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 0,
+    explanation: '',
   },
   {
-    text: "한국에서 개(dog)의 어린모습을 의미하는 말로 알맞은것은?",
-    choices: ["강아지", "고양이", "병아리", "야옹이"],
-    answer: 0
+    question: '234',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 0,
+    explanation: '',
   },
   {
-    text: "한국에서 여자친구 또는 남자친구를 뜻하는 단어를 고르시오",
-    choices: ["친구", "사람", "애인", "아이"],
-    answer: 2
-  }
+    question: '234',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 0,
+    explanation: '',
+  },
+  // ... 더 문제 추가
 ]
 
-const AdminPage = () => {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [selected, setSelected] = useState(null)
-  const [isCorrect, setIsCorrect] = useState(null)
-  const [showResult, setShowResult] = useState(false)
+function shuffleArray(array) {
+  const arr = array.slice()
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
 
-  const currentQuestion = quizData[currentIndex]
+const QuizWithExplanation = () => {
+  const navigate = useNavigate()
 
-  const handleAnswer = (index) => {
-    if (selected !== null) return
-    setSelected(index)
-    setIsCorrect(index === currentQuestion.answer)
+  const [currentIdx, setCurrentIdx] = useState(0)
+  const [showExplanation, setShowExplanation] = useState(false)
+  const [shuffledOptions, setShuffledOptions] = useState([])
+  const [selectedIndex, setSelectedIndex] = useState(null)
+  const [correctCount, setCorrectCount] = useState(0)
+
+  useEffect(() => {
+    setShuffledOptions(shuffleArray(questions[currentIdx].options))
+    setSelectedIndex(null)
+    setShowExplanation(false)
+  }, [currentIdx])
+
+  const currentQuestion = questions[currentIdx]
+  const correctAnswer = currentQuestion.options[currentQuestion.correctIndex]
+  const selectedAnswer = selectedIndex !== null ? shuffledOptions[selectedIndex] : null
+  const isCorrect = selectedAnswer === correctAnswer
+
+  const handleShowExplanation = () => {
+    if (selectedIndex === null) {
+      alert('답변을 선택해주세요.')
+      return
+    }
+    if (isCorrect) {
+      setCorrectCount(prev => prev + 1)
+    }
+    setShowExplanation(true)
   }
 
   const handleNext = () => {
-    if (currentIndex + 1 < quizData.length) {
-      setCurrentIndex(currentIndex + 1)
-      setSelected(null)
-      setIsCorrect(null)
+    if (currentIdx < questions.length - 1) {
+      setCurrentIdx(currentIdx + 1)
     } else {
-      setShowResult(true)
+      // 정답률 페이지로 이동
+      navigate('/result', { state: { total: questions.length, correct: correctCount } })
     }
   }
 
   return (
-    <div className="p-10 max-w-xl mx-auto text-center">
-      <h2 className="text-2xl font-bold mb-6">*초급* 다음 문제를 푸시오</h2>
+    <div style={{ padding: '2rem' }}>
+      <h2>문제 {currentIdx + 1} / {questions.length}</h2>
 
-      {showResult ? (
-        <div className="text-xl font-semibold text-green-700">
-          🎉 모든 문제를 다 풀었어요!
-        </div>
-      ) : (
-        <div className="bg-white p-6 rounded shadow">
-          <p className="text-lg font-medium mb-4">
-            <span className="text-sm text-gray-500">문제 {currentIndex + 1} / {quizData.length}</span><br />
-            {currentQuestion.text}
-          </p>
-          <div className="flex flex-col gap-3">
-            {currentQuestion.choices.map((choice, index) => (
-              <button
-                key={index}
-                onClick={() => handleAnswer(index)}
-                disabled={selected !== null}
-                className={`
-                  px-4 py-2 rounded border text-left
-                  ${selected === index ? (
-                    index === currentQuestion.answer
-                      ? "bg-green-200 border-green-500"
-                      : "bg-red-200 border-red-500"
-                  ) : "hover:bg-gray-100"}
-                `}
-              >
-                {choice}
-              </button>
+      {!showExplanation ? (
+        <>
+          <h3>{currentQuestion.question}</h3>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {shuffledOptions.map((option, idx) => (
+              <li key={idx} style={{ margin: '0.5rem 0' }}>
+                <label style={{ cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="quiz-option"
+                    checked={selectedIndex === idx}
+                    onChange={() => setSelectedIndex(idx)}
+                  />
+                  {' '}
+                  {option}
+                </label>
+              </li>
             ))}
-          </div>
-
-          {selected !== null && (
-            <div className="mt-6">
-              <p className="text-lg font-semibold mb-4">
-                {isCorrect ? "✅ 정답입니다!" : "❌ 틀렸어요. 다시 확인해보세요!"}
-              </p>
-              <button
-                onClick={handleNext}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                {currentIndex + 1 < quizData.length ? "다음 문제" : "결과 보기"}
-              </button>
-            </div>
-          )}
-        </div>
+          </ul>
+          <button onClick={handleShowExplanation} style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}>
+            해설 보기
+          </button>
+        </>
+      ) : (
+        <>
+          <h3>해설</h3>
+          <p>당신의 답: {selectedAnswer} {isCorrect ? '✅' : '❌'}</p>
+          <p>정답: {correctAnswer}</p>
+          <p>{currentQuestion.explanation}</p>
+          <button onClick={handleNext} style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}>
+            {currentIdx < questions.length - 1 ? '다음 문제' : '정답률 보기'}
+          </button>
+        </>
       )}
     </div>
   )
 }
 
-export default AdminPage
+export default QuizWithExplanation

@@ -1,0 +1,125 @@
+:root {
+  --primary: rgba(0, 199, 177, 0.4);
+  --yellow: #f9d849;
+  --bg: #f9fafb;
+  --text: #1f2937;
+  --subtext: #6b7280;
+  --radius: 16px;
+  --font: 'Inter', 'Pretendard', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.select-container {
+  width: 100vw;
+  max-width: 400px;
+  aspect-ratio: 9 / 16;
+  background: linear-gradient(135deg, #f9fafb 0%, #fef9e7 100%);
+  /* 연한 하늘색 → 아주 연한 노란색 그라데이션 */
+  position: relative;
+  overflow: hidden;
+  margin: 2rem auto;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+}
+
+.select-container::before {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: rgba(0, 199, 177, 0.15);
+  border-radius: 50%;
+  top: -100px;
+  left: -100px;
+  filter: blur(50px);
+  z-index: 0;
+}
+
+.select-container::after {
+  content: "";
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: rgba(249, 216, 73, 0.12); /* 노란색 투명도 약간 증가 */
+  border-radius: 50%;
+  bottom: -150px;
+  right: -150px;
+  filter: blur(70px);
+  z-index: 0;
+}
+
+.select-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 선택 페이지 전체 컨테이너 */
+.select-container {
+  min-height: 100vh;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+/* 제목 */
+.select-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text);
+}
+
+/* 버튼 박스 */
+.select-button-box {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* 공통 버튼 */
+.select-button {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  min-width: 160px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 학습 버튼 */
+.select-button.learn {
+  background-color: var(--primary);
+}
+
+.select-button.learn:hover {
+  background-color: #00b5a0;
+}
+
+/* 테스트 버튼 */
+.select-button.test {
+  background-color: var(--yellow);
+  color: var(--text);
+}
+
+.select-button.test:hover {
+  background-color: #e7c739;
+}
