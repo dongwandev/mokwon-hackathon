@@ -32,7 +32,7 @@ const ResultPage = () => {
                 <span className="value">{percentage}%</span>
               </div>
             </div>
-            <button className="retry-button" onClick={() => navigate('/')}>
+            <button className="retry-button" onClick={() => navigate('/learningchoice')}>
               다시 풀기
             </button>
           </div>
