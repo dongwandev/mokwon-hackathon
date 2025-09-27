@@ -1,0 +1,130 @@
+/* ── Mobile-first • Green primary ── */
+:root{
+  --green-25:#f6fff8; --green-50:#f0fdf4; --green-100:#dcfce7;
+  --green-200:#bbf7d0; --green-500:#22c55e; --green-600:#16a34a;
+  --yellow-400:#facc15; --yellow-500:#f59e0b;
+  --ink-900:#0f172a; --ink-700:#334155;
+  --card:#ffffff; --line:rgba(20,184,166,.25);
+  --shadow:0 8px 24px rgba(18,83,60,.10);
+  --tabbar-h: 64px;
+}
+
+/* 페이지 외부 배경 */
+body{
+  background: linear-gradient(180deg, var(--green-25), #ffffff 60%);
+}
+
+/* 페이지 프레임(모바일 폭 제한 + 안전영역) */
+.home-page{
+  max-width: 420px;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: calc(16px + env(safe-area-inset-top)) 16px
+           calc(24px + env(safe-area-inset-bottom));
+  font-family: ui-sans-serif, system-ui, -apple-system, "Noto Sans KR", Roboto, Helvetica, Arial;
+  padding-bottom: calc(var(--tabbar-h) + 20px + env(safe-area-inset-bottom));
+}
+
+/* ▶ 내부 단일 컨테이너: 외부 배경과 확실히 분리 */
+.home-shell{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--green-100);
+  border-radius: 22px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+/* 헤더 */
+.home-header{
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+}
+.home-title{
+  margin:0;
+  font-weight:900;
+  letter-spacing:-.02em;
+  color:var(--ink-900);
+  font-size:clamp(20px, 5vw, 24px);
+}
+
+/* 내용 카드(컨테이너 안의 첫 섹션) */
+.home-card{
+  background:
+    radial-gradient(160px 160px at 90% -10%, rgba(250,204,21,.16), transparent 60%),
+    var(--green-50);
+  border:1px solid var(--green-100);
+  border-radius: 16px;
+  padding: 16px;
+}
+.home-paragraph{
+  margin:0;
+  font-size:16px;
+  line-height:1.6;
+  color:var(--ink-900);
+}
+
+/* 고정 바 컨테이너 (HomePage.jsx의 <footer class="home-bottomnav">) */
+.home-bottomnav{
+  position: fixed;
+  left: 0; right: 0;
+  bottom: 0;
+  z-index: 50;
+
+  /* 하단 안전영역(아이폰 노치) + 내측 여백 */
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+
+  /* 배경을 살짝 깔아 콘텐츠와 분리 (투명→흰색 그라데이션) */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.85) 35%, rgba(255,255,255,.95) 100%);
+
+  /* 사파리 스크롤 시 상태바 겹침 방지 */
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.home-bottomnav .menu-nav{
+  max-width: 420px;      /* .home-page의 폭과 동일하게 맞춤 */
+  height: var(--tabbar-h);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+/* 캡슐형 세그먼트 컨트롤 스타일(이미 적용한 스타일이 있다면 유지) */
+.home-bottomnav .menu{
+  width: 100%;
+  padding: 6px;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(18,83,60,.06);
+  overflow: hidden; /* 내부 그림자/테두리 클립 */
+}
+
+.home-bottomnav .menu-item{ flex: 1 1 0; min-width: 0; }
+.home-bottomnav .menu-item a{
+  display:block; width:100%;
+  min-height: 40px; padding: 10px 14px;
+  text-align:center; text-decoration: none;
+  font-weight: 800;
+  color: var(--ink-900);
+  background: transparent; border: 0; border-radius: 999px;
+  transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+}
+
+/* 모바일에서 의도치 않은 튀어나옴 방지를 위해 hover 올림 효과 제거(터치 디바이스) */
+@media (pointer:coarse){
+  .home-bottomnav .menu-item a:hover{ transform:none; }
+}
+.home-bottomnav .menu-item a.is-active{
+  background: linear-gradient(180deg, var(--green-500), var(--green-600));
+  color:#fff;
+  box-shadow:0 8px 18px rgba(34,197,94,.35);
+}
