@@ -1,5 +1,4 @@
 import "./HomePage.css";
-import Menu from "../components/Menu";
 
 function HomePage() {
   return (
@@ -13,11 +12,6 @@ function HomePage() {
         <section className="home-card">
           <p className="home-paragraph">여기에 홈 페이지 콘텐츠가 들어갑니다.</p>
         </section>
-
-        {/* 메뉴는 수정 X, 래퍼만 유지 */}
-        <footer className="home-bottomnav">
-          <Menu />
-        </footer>
       </div>
     </main>
   );
