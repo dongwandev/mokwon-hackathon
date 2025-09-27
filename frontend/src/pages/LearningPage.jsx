@@ -148,8 +148,20 @@ export default function LearningPage() {
     return (
       <Container>
         <h2>학습 페이지</h2>
-        <div className="big-container">
-          <h1>
+        <div
+          className="big-container"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h1
+            style={{
+              textAlign: "center",
+              lineHeight: "2em",
+            }}
+          >
             {loadingStep}
             <br />
             잠시만 기다려주세요 ⏳
