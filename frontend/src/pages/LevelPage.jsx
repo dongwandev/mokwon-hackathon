@@ -47,6 +47,7 @@ export default function LevelPage() {
 
   // 초기 로드: 1) 문제 생성(덮어쓰기) → 2) 최신 questions.json 조회
   useEffect(() => {
+    console.log('초기 문제 생성 및 로드 시도');
     (async () => {
       try {
         setLoading(true);
@@ -59,7 +60,6 @@ export default function LevelPage() {
             perLevel: 10,
           });
         } catch (genErr) {
-          // 생성이 실패해도 기존 파일이 있을 수 있으니, 조회는 시도
           console.warn('문제 생성 실패, 기존 데이터로 진행 시도:', genErr);
         }
 
@@ -123,10 +123,8 @@ export default function LevelPage() {
   const onPick = (optIdx) => {
     if (selectedIdx !== null) return; // 이미 선택했으면 무시
     const correct = options[optIdx]?.isCorrect === true;
-
     setSelectedIdx(optIdx);
     setWasCorrect(correct);
-
     if (correct) {
       setTotalCorrect((s) => s + 1);
       setCorrectCounts((prev) => ({ ...prev, [level]: prev[level] + 1 }));
@@ -147,7 +145,6 @@ export default function LevelPage() {
 
     // 문제 10개 완료되었는지 먼저 체크
     if (askedCount + 1 >= 10) {
-      // 마지막 문제로 종료
       setAskedCount(10);
       setSelectedIdx(null);
       setWasCorrect(null);
@@ -158,7 +155,7 @@ export default function LevelPage() {
     setSelectedIdx(null);
     setWasCorrect(null);
 
-    // 이미 정답이면 correctCounts는 증가된 상태이므로 그 값을 기준으로 레벨 전환
+    // 정답 카운트는 이미 반영됨 → 그 값을 기준으로 레벨 전환
     setCorrectCounts((prevCounts) => {
       const nextLevel = decideNextLevel(level, prevCounts);
 
@@ -171,24 +168,21 @@ export default function LevelPage() {
         return { ...prevIdx, [nextLevel]: nextVal };
       });
 
-      // askedCount는 함수형 업데이트로 안전하게 증가
       setAskedCount((c) => c + 1);
       return prevCounts;
     });
   };
 
-  // 최종 레벨 계산: “정답 3개가 넘어간 단계”
+  // 최종 레벨 계산
   const finalLevel = useMemo(() => {
     if (correctCounts.advanced >= 3) return 'advanced';
     if (correctCounts.intermediate >= 3) return 'intermediate';
     if (correctCounts.beginner >= 3) return 'beginner';
-    return 'beginner'; // 아무 것도 3 미만이면 기본값
+    return 'beginner';
   }, [correctCounts]);
 
   // 리스타트
-  const onRestart = () => {
-    window.location.reload();
-  };
+  const onRestart = () => window.location.reload();
 
   // 결과 화면
   if (!loading && !error && askedCount >= 10) {
@@ -247,39 +241,42 @@ export default function LevelPage() {
 
       <div className="level-question">문제: {current.sentence}</div>
 
-      <div className="options">
+      {/* 라디오 패턴 */}
+      <div className="options" role="radiogroup" aria-label="정답 선택">
         {options.map((opt, idxOpt) => {
           const number = idxOpt + 1;
-          const chosen = selectedIdx === idxOpt;
+          const id = `opt-${idxOpt}`;
 
-          // 상태에 따른 클래스(배경색)
+          // 선택 후: 정답은 초록, 선택한 오답만 빨강
           let stateClass = '';
-          if (selectedIdx !== null && chosen) {
-            stateClass = opt.isCorrect
-              ? 'option--correct'
-              : 'option--incorrect';
+          if (selectedIdx !== null) {
+            if (opt.isCorrect) stateClass = 'option--correct';
+            if (selectedIdx === idxOpt && !opt.isCorrect)
+              stateClass = 'option--incorrect';
           }
 
           return (
-            <div
-              key={`${opt.text}-${idxOpt}`}
-              className={`option ${stateClass}`}
-            >
-              <button
-                onClick={() => onPick(idxOpt)}
+            <div key={id} className={`option-wrap ${stateClass}`}>
+              <input
+                id={id}
+                name="question"
+                type="radio"
+                className="option-radio"
+                checked={selectedIdx === idxOpt}
                 disabled={selectedIdx !== null}
-                className="option-btn"
-              >
-                {number}번
-              </button>
-              <span className="option-text">{opt.text}</span>
+                onChange={() => selectedIdx === null && onPick(idxOpt)}
+              />
+              <label htmlFor={id} className="option option--label">
+                <span className="option-number">{number}번</span>
+                <span className="option-text">{opt.text}</span>
+              </label>
             </div>
           );
         })}
       </div>
 
       {selectedIdx !== null && (
-        <div className="feedback">
+        <div className="feedback" aria-live="polite">
           {wasCorrect ? '✅ 정답입니다!' : '❌ 오답입니다.'}
         </div>
       )}
