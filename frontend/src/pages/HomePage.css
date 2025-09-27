@@ -1,26 +1,33 @@
 /* ── Mobile-first • Green primary ── */
-:root{
-  --green-25:#f6fff8; --green-50:#f0fdf4; --green-100:#dcfce7;
-  --green-200:#bbf7d0; --green-500:#22c55e; --green-600:#16a34a;
-  --yellow-400:#facc15; --yellow-500:#f59e0b;
-  --ink-900:#0f172a; --ink-700:#334155;
-  --card:#ffffff; --line:rgba(20,184,166,.25);
-  --shadow:0 8px 24px rgba(18,83,60,.10);
+:root {
+  --green-25: #f6fff8;
+  --green-50: #f0fdf4;
+  --green-100: #dcfce7;
+  --green-200: #bbf7d0;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --yellow-400: #facc15;
+  --yellow-500: #f59e0b;
+  --ink-900: #0f172a;
+  --ink-700: #334155;
+  --card: #ffffff;
+  --line: rgba(20, 184, 166, 0.25);
+  --shadow: 0 8px 24px rgba(18, 83, 60, 0.1);
   --tabbar-h: 64px;
 }
 
 /* 헤더 */
-.home-header{
-  display:flex;
-  align-items:flex-end;
-  gap:10px;
+.home-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
 }
-.home-title{
-  margin:0;
-  font-weight:900;
-  letter-spacing:-.02em;
-  color:var(--ink-900);
-  font-size:clamp(20px, 5vw, 24px);
+.home-title {
+  margin: 0;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ink-900);
+  font-size: clamp(20px, 5vw, 24px);
 }
 
 /* 내용 카드(컨테이너 안의 첫 섹션) */
@@ -28,24 +35,30 @@
   position: relative;
   overflow: hidden;
   border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-
-  max-width: 830px; /* 최대 넓이 지정 */
-  width: 130%;       /* 화면 가로 크기 */
-  min-height: 765px; /* 최소 높이 지정 */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 
   /* 배경 그라데이션 추가 */
-  background:
-    radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.15), transparent 70%),
-    radial-gradient(circle at top left, rgba(34, 197, 94, 0.15), transparent 70%),
+  background: radial-gradient(
+      circle at bottom right,
+      rgba(250, 204, 21, 0.15),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at top left,
+      rgba(34, 197, 94, 0.15),
+      transparent 70%
+    ),
     linear-gradient(135deg, #f9fafb 0%, #fef9e7 100%);
 }
 
 .home-flex-container {
   display: flex;
   flex-direction: column; /* 가로 → 세로 방향으로 변경 */
-  align-items: center;    /* 가운데 정렬 유지 */
-  gap: 2rem;              /* 칸 사이 간격 */
+  align-items: center; /* 가운데 정렬 유지 */
+  gap: 2rem; /* 칸 사이 간격 */
   max-width: 700px;
   margin: 0 auto;
 }
@@ -55,22 +68,22 @@
   background-color: white;
   padding: 1rem;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* 고정 바 컨테이너 (HomePage.jsx의 <footer class="home-bottomnav">) */
-.home-bottomnav{
+.home-bottomnav {
   position: fixed;
-  left: 0; right: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
   z-index: 50;
 
   /* 하단 안전영역(아이폰 노치) + 내측 여백 */
   padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-
 }
 
-.home-bottomnav .menu-nav{
+.home-bottomnav .menu-nav {
   height: var(--tabbar-h);
   margin: 0 auto;
   display: flex;
@@ -78,7 +91,7 @@
 }
 
 /* 캡슐형 세그먼트 컨트롤 스타일(이미 적용한 스타일이 있다면 유지) */
-.home-bottomnav .menu{
+.home-bottomnav .menu {
   width: 100%;
   padding: 6px;
   margin: 0;
@@ -87,26 +100,36 @@
   border: 1px solid var(--line);
   border-radius: 999px;
   background: #fff;
-  box-shadow: 0 2px 10px rgba(18,83,60,.06);
+  box-shadow: 0 2px 10px rgba(18, 83, 60, 0.06);
   overflow: hidden; /* 내부 그림자/테두리 클립 */
 }
 
-.home-bottomnav .menu-item{ flex: 1 1 0; min-width: 0; }
-.home-bottomnav .menu-item a{
-  display:block; width:100%;
-  min-height: 40px; padding: 10px 14px;
-  text-align:center; text-decoration: none;
+.home-bottomnav .menu-item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.home-bottomnav .menu-item a {
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 14px;
+  text-align: center;
+  text-decoration: none;
   font-weight: 800;
   color: var(--ink-900);
-  background: transparent; border: 0; border-radius: 999px;
-  transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
 }
 
 /* 모바일에서 의도치 않은 튀어나옴 방지를 위해 hover 올림 효과 제거(터치 디바이스) */
-@media (pointer:coarse){
-  .home-bottomnav .menu-item a:hover{ transform:none; }
+@media (pointer: coarse) {
+  .home-bottomnav .menu-item a:hover {
+    transform: none;
+  }
 }
-.home-bottomnav .menu-item a.is-active{
-  color:#fff;
-  box-shadow:0 8px 18px rgba(34,197,94,.35);
+.home-bottomnav .menu-item a.is-active {
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(34, 197, 94, 0.35);
 }

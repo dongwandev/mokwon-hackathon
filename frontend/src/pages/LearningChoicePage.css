@@ -8,13 +8,6 @@
   --font: 'Inter', 'Pretendard', sans-serif;
 }
 
-body {
-  margin: 0;
-  font-family: var(--font);
-  background-color: var(--bg);
-  color: var(--text);
-}
-
 .select-container {
   /* ↓ 가로는 컨테이너 안에서 양쪽으로 꽉 차게 */
   width: 100%;

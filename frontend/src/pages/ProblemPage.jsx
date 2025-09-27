@@ -91,7 +91,12 @@ const QuizWithExplanation = () => {
           </ul>
 
           <div className="actions">
-            <button className="btn btn-next" onClick={handleShowExplanation}>
+            <button
+              className="btn btn-next"
+              onClick={handleShowExplanation}
+              // ⬇️ 선택 전엔 비활성화(시각적 피드백과 통일)
+              disabled={selectedIndex === null}
+            >
               해설 보기
             </button>
           </div>
@@ -100,8 +105,7 @@ const QuizWithExplanation = () => {
         <>
           <h3 className="explain-title">해설</h3>
           <div className="feedback">
-            당신의 답: {selectedAnswer}{' '}
-            {isCorrect ? '✅' : '❌'}
+            당신의 답: {selectedAnswer} {isCorrect ? '✅' : '❌'}
             <br />
             정답: {correctAnswer}
           </div>
