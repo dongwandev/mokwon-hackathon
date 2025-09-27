@@ -1,11 +1,11 @@
+// src/pages/LevelPage.jsx
 import { useEffect, useMemo, useState } from 'react';
 
-// .env 안 씀: 하드코딩
-const API_BASE = 'http://localhost:4000';
+const API_BASE = 'http://localhost:4000'; // .env 미사용
 
 // Fisher–Yates 셔플
-function shuffle(array) {
-  const a = array.slice();
+function shuffle(arr) {
+  const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
@@ -13,41 +13,62 @@ function shuffle(array) {
   return a;
 }
 
+const LEVELS = ['beginner', 'intermediate', 'advanced'];
+
 export default function LevelPage() {
+  // 로딩/에러
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [questions, setQuestions] = useState([]); // 현재 레벨 문제 목록
-  const [qIndex, setQIndex] = useState(0); // 현재 문제 인덱스
+
+  // 문제 뱅크
+  const [bank, setBank] = useState({
+    beginner: [],
+    intermediate: [],
+    advanced: [],
+  });
+
+  // 진행 상태
+  const [level, setLevel] = useState('beginner');
+  const [idx, setIdx] = useState({ beginner: 0, intermediate: 0, advanced: 0 });
+  const [correctCounts, setCorrectCounts] = useState({
+    beginner: 0,
+    intermediate: 0,
+    advanced: 0,
+  });
+  const [askedCount, setAskedCount] = useState(0); // 총 출제 수(최대 10)
+  const [totalCorrect, setTotalCorrect] = useState(0);
+
+  // 현재 문제 선택 상태
   const [selectedIdx, setSelectedIdx] = useState(null);
+  const [wasCorrect, setWasCorrect] = useState(null);
 
-  // 우선 beginner만 (원하면 URL 쿼리/상태로 교체)
-  const level = 'beginner';
-
-  // 1) 문제 로드: 서버가 전체/부분 둘 다 대응하도록 방어
+  // 초기 로드
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
         setError('');
-        setSelectedIdx(null);
 
-        const res = await fetch(`${API_BASE}/api/questions?level=${level}`);
-        if (!res.ok) throw new Error(`문제 로드 실패: ${res.status}`);
-
+        const res = await fetch(`${API_BASE}/api/questions`);
+        if (!res.ok) throw new Error('문제 로드 실패');
         const data = await res.json();
-        // 서버가 { beginner:[...] } 형태로 내려줌
-        // 혹은 실수로 전체 { beginner, intermediate, advanced }가 올 수도 있어 방어
-        const list = Array.isArray(data)
-          ? data
-          : Array.isArray(data[level])
-          ? data[level]
-          : Array.isArray(data?.beginner)
-          ? data.beginner
-          : [];
 
-        if (list.length === 0) throw new Error('받은 문제가 비어 있습니다.');
-        setQuestions(list);
-        setQIndex(0);
+        // 각 레벨 문제 셔플
+        const nextBank = {
+          beginner: shuffle(data.beginner || []),
+          intermediate: shuffle(data.intermediate || []),
+          advanced: shuffle(data.advanced || []),
+        };
+        setBank(nextBank);
+
+        // 상태 초기화
+        setLevel('beginner');
+        setIdx({ beginner: 0, intermediate: 0, advanced: 0 });
+        setCorrectCounts({ beginner: 0, intermediate: 0, advanced: 0 });
+        setAskedCount(0);
+        setTotalCorrect(0);
+        setSelectedIdx(null);
+        setWasCorrect(null);
       } catch (e) {
         console.error(e);
         setError(e.message || '알 수 없는 오류');
@@ -55,33 +76,138 @@ export default function LevelPage() {
         setLoading(false);
       }
     })();
-  }, [level]);
+  }, []);
 
-  // 2) 현재 문제
-  const current = questions[qIndex];
+  // 현재 문제
+  const current = bank[level][idx[level]];
 
-  // 3) 보기 구성 + 셔플 (정답이 options에 실수로 포함되어도 중복 제거)
+  // 보기(정답+오답) 셔플
   const options = useMemo(() => {
     if (!current) return [];
     const base = new Set(current.options || []);
-    base.delete(current.answer); // 혹시 포함돼 있으면 제거
-    const merged = [...base, current.answer] // 정답 추가
-      .slice(0, 4) // 4개로 제한(혹시 실수로 3개 이상 넣었을 때 대비)
+    base.delete(current.answer); // 혹시 중복 대비
+    const merged = [...base, current.answer]
+      .slice(0, 4)
       .map((t) => ({ text: t, isCorrect: t === current.answer }));
     return shuffle(merged);
   }, [current]);
 
-  const isCorrect =
-    selectedIdx !== null ? options[selectedIdx]?.isCorrect === true : null;
+  // 보기 선택 시 처리
+  const onPick = (optIdx) => {
+    if (selectedIdx !== null) return; // 이미 선택했으면 무시
+    const correct = options[optIdx]?.isCorrect === true;
 
+    setSelectedIdx(optIdx);
+    setWasCorrect(correct);
+
+    if (correct) {
+      setTotalCorrect((s) => s + 1);
+      setCorrectCounts((prev) => ({ ...prev, [level]: prev[level] + 1 }));
+    }
+  };
+
+  // 레벨 전환 규칙
+  const decideNextLevel = (curLevel, counts) => {
+    if (curLevel === 'beginner' && counts.beginner >= 3) return 'intermediate';
+    if (curLevel === 'intermediate' && counts.intermediate >= 3)
+      return 'advanced';
+    return curLevel; // advanced는 유지
+  };
+
+  // 다음 문제로 이동
   const onNext = () => {
+    if (selectedIdx === null) return;
+
+    // 문제 10개 완료되었는지 먼저 체크
+    if (askedCount + 1 >= 10) {
+      // 마지막 문제로 종료
+      setAskedCount(10);
+      setSelectedIdx(null);
+      setWasCorrect(null);
+      return;
+    }
+
+    // 상태 리셋(선택 초기화)
     setSelectedIdx(null);
-    setQIndex((prev) => {
-      const next = prev + 1;
-      return next >= questions.length ? 0 : next; // 마지막이면 처음으로(데모용)
+    setWasCorrect(null);
+
+    // 이미 정답이면 correctCounts는 증가된 상태이므로 그 값을 기준으로 레벨 전환
+    setCorrectCounts((prevCounts) => {
+      const nextLevel = decideNextLevel(level, prevCounts);
+
+      setLevel(nextLevel);
+      setIdx((prevIdx) => {
+        const cur = prevIdx[nextLevel] ?? 0;
+        const next = cur + 1;
+        const max = bank[nextLevel]?.length || 0;
+        const nextVal = max > 0 ? (next >= max ? 0 : next) : 0; // 고갈 시 순환
+        return { ...prevIdx, [nextLevel]: nextVal };
+      });
+
+      setAskedCount((c) => c + 1);
+      return prevCounts;
     });
   };
 
+  // 최종 레벨 계산: “정답 3개가 넘어간 단계”
+  const finalLevel = useMemo(() => {
+    if (correctCounts.advanced >= 3) return 'advanced';
+    if (correctCounts.intermediate >= 3) return 'intermediate';
+    if (correctCounts.beginner >= 3) return 'beginner';
+    return 'beginner'; // 아무 것도 3 미만이면 기본값
+  }, [correctCounts]);
+
+  // 리스타트
+  const onRestart = () => {
+    // 전체를 새로 로드(간단)
+    window.location.reload();
+  };
+
+  // 결과 화면
+  if (!loading && !error && askedCount >= 10) {
+    return (
+      <main style={{ padding: 16, maxWidth: 720, margin: '0 auto' }}>
+        <h2 style={{ marginTop: 0 }}>테스트 결과</h2>
+        <div style={{ marginBottom: 12, fontSize: 16 }}>
+          총 10문제 중 <b>{totalCorrect}</b>개 정답
+        </div>
+        <div style={{ marginBottom: 8 }}>레벨별 정답:</div>
+        <ul>
+          <li>초급: {correctCounts.beginner}</li>
+          <li>중급: {correctCounts.intermediate}</li>
+          <li>고급: {correctCounts.advanced}</li>
+        </ul>
+        <div style={{ marginTop: 12, fontSize: 18 }}>
+          최종 레벨:{' '}
+          <b>
+            {finalLevel === 'beginner'
+              ? '초급'
+              : finalLevel === 'intermediate'
+              ? '중급'
+              : '고급'}
+          </b>
+        </div>
+
+        <div style={{ marginTop: 16 }}>
+          <button
+            onClick={onRestart}
+            style={{
+              padding: '10px 14px',
+              borderRadius: 8,
+              border: '1px solid #10b981',
+              background: '#10b981',
+              color: '#fff',
+              cursor: 'pointer',
+            }}
+          >
+            다시 시작
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  // 일반 화면
   if (loading) return <main style={{ padding: 16 }}>불러오는 중…</main>;
   if (error)
     return <main style={{ padding: 16, color: 'crimson' }}>에러: {error}</main>;
@@ -89,18 +215,31 @@ export default function LevelPage() {
 
   return (
     <main style={{ padding: 16, maxWidth: 720, margin: '0 auto' }}>
-      <div style={{ marginBottom: 12 }}>
-        <span style={{ fontWeight: 700 }}>Q. 다음 중 정답은 무엇인가요?</span>
-      </div>
+      <header
+        style={{
+          marginBottom: 12,
+          display: 'flex',
+          gap: 12,
+          alignItems: 'baseline',
+          flexWrap: 'wrap',
+        }}
+      >
+        <h2 style={{ margin: 0 }}>Q. 다음 중 정답은 무엇인가요?</h2>
+        <small style={{ color: '#6b7280' }}>
+          현재 레벨: <b>{level}</b> / 정답 B:{correctCounts.beginner} · I:
+          {correctCounts.intermediate} · A:{correctCounts.advanced} / 진행{' '}
+          {askedCount}/10
+        </small>
+      </header>
 
       <div style={{ marginBottom: 12, fontSize: 18 }}>
         문제: {current.sentence}
       </div>
 
       <div style={{ display: 'grid', gap: 8 }}>
-        {options.map((opt, idx) => {
-          const number = idx + 1;
-          const chosen = selectedIdx === idx;
+        {options.map((opt, idxOpt) => {
+          const number = idxOpt + 1;
+          const chosen = selectedIdx === idxOpt;
           const bg =
             selectedIdx === null
               ? '#f3f4f6'
@@ -109,10 +248,9 @@ export default function LevelPage() {
                 ? '#d1fae5'
                 : '#fee2e2'
               : '#f3f4f6';
-
           return (
             <div
-              key={`${opt.text}-${idx}`}
+              key={`${opt.text}-${idxOpt}`}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -124,7 +262,7 @@ export default function LevelPage() {
               }}
             >
               <button
-                onClick={() => setSelectedIdx(idx)}
+                onClick={() => onPick(idxOpt)}
                 disabled={selectedIdx !== null}
                 style={{
                   width: 48,
@@ -145,7 +283,7 @@ export default function LevelPage() {
 
       {selectedIdx !== null && (
         <div style={{ marginTop: 12, fontWeight: 600 }}>
-          {isCorrect ? '✅ 정답입니다!' : '❌ 오답입니다.'}
+          {wasCorrect ? '✅ 정답입니다!' : '❌ 오답입니다.'}
         </div>
       )}
 
@@ -162,12 +300,8 @@ export default function LevelPage() {
             cursor: selectedIdx === null ? 'not-allowed' : 'pointer',
           }}
         >
-          다음 문제
+          {askedCount === 9 ? '결과 보기' : '다음 문제'}
         </button>
-      </div>
-
-      <div style={{ marginTop: 12, color: '#6b7280', fontSize: 14 }}>
-        {qIndex + 1} / {questions.length}
       </div>
     </main>
   );
