@@ -34,7 +34,7 @@ function App() {
         />
         <Route path="/LearningPage" element={<LearningPage />} />
         <Route path="/ProblemPage" element={<ProblemPage />} />
-        <Route path="/ProblemPageResult" elment={<ProblemPageResult/>} />
+        <Route path="/ProblemPageResult" element={<ProblemPageResult/>} />
       </Routes>
 
       {/* 푸터 */}
