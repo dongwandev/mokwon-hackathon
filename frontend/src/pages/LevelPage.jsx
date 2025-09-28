@@ -183,7 +183,7 @@ export default function LevelPage() {
   }, [correctCounts]);
 
   // 홈으로 이동
-  const goHome = () => navigate("/home");
+  const goHome = () => navigate("/");
 
   // 결과 화면
   if (!loading && !error && askedCount >= 10) {

@@ -212,7 +212,7 @@ export default function LearningPage() {
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/")}
             >
               홈으로
             </button>

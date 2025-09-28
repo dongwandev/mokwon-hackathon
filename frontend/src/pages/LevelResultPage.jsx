@@ -5,7 +5,7 @@ function LevelResultPage() {
   const percent = Math.round((correct / total) * 100);
 
   const navigate = useNavigate();
-  const goToHome = () => navigate("/home");
+  const goToHome = () => navigate("/");
 
   return (
     <div>
