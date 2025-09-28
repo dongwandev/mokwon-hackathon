@@ -49,7 +49,6 @@ export default function LevelPage() {
 
   // 초기 로드: 1) 문제 생성(덮어쓰기) → 2) 최신 questions.json 조회
   useEffect(() => {
-    console.log("초기 문제 생성 및 로드 시도");
     (async () => {
       try {
         setLoading(true);
@@ -184,7 +183,7 @@ export default function LevelPage() {
   }, [correctCounts]);
 
   // 홈으로 이동
-  const goHome = () => navigate("/home");
+  const goHome = () => navigate("/");
 
   // 결과 화면
   if (!loading && !error && askedCount >= 10) {
@@ -235,7 +234,10 @@ export default function LevelPage() {
             flex: 1,
           }}
         >
-          <h1>문제 생성 중… 잠시만요 ⏳</h1>
+          <h1 style={{
+            textAlign: "center",
+            lineHeight: "2em",
+          }}>문제 생성 중…<br />잠시만 기다려주세요 ⏳</h1>
         </div>
       </Container>
     );
@@ -286,8 +288,8 @@ export default function LevelPage() {
                 disabled={selectedIdx !== null}
                 onChange={() => selectedIdx === null && onPick(idxOpt)}
               />
-              <label htmlFor={id} className="option option--label">
-                <span className="option-number">{number}번</span>
+              <label htmlFor={id} className="option option--label" id={wasCorrect ? "correct" : "incorrect"}>
+                <span className="option-number" id={wasCorrect ? "correct" : "incorrect"}>{number}번</span>
                 <span className="option-text">{opt.text}</span>
               </label>
             </div>

@@ -23,11 +23,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/level" element={<LevelPage />} />
         <Route path="/levelresult" element={<LevelResultPage />} />
         <Route path="/learningchoice" element={<LearningChoicePage />} />
-        <Route path="/home" element={<HomePage />} />
         {/* 선택: 404 최소 대응 */}
         <Route
           path="*"

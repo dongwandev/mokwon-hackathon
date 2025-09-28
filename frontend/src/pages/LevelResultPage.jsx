@@ -5,7 +5,7 @@ function LevelResultPage() {
   const percent = Math.round((correct / total) * 100);
 
   const navigate = useNavigate();
-  const goToHome = () => navigate("/home");
+  const goToHome = () => navigate("/");
 
   return (
     <div>
@@ -16,7 +16,7 @@ function LevelResultPage() {
       </div>
 
       <div>
-        <strong>정답률</strong>: <span>{correct}/{total} ({percent}%)</span>
+        <strong>정답률</strong>: <span>{correct}/{total} ({Math.floor(percent)}%)</span>
       </div>
       <div>
         <button onClick={goToHome}>홈으로</button>

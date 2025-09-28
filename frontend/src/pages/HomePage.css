@@ -133,3 +133,22 @@
   color: #fff;
   box-shadow: 0 8px 18px rgba(34, 197, 94, 0.35);
 }
+
+/* 공통 버튼 */
+.select-button {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  min-width: 160px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 테스트 버튼 */
+.select-button.test {
+  background-color: var(--yellow);
+  color: var(--text);
+}

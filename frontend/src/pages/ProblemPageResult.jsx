@@ -29,7 +29,7 @@ const ResultPage = () => {
               </div>
               <div className="result-item">
                 <span className="label">정답률</span>
-                <span className="value">{percentage}%</span>
+                <span className="value">{Math.floor(percentage)}%</span>
               </div>
             </div>
             <button className="retry-button" onClick={() => navigate('/learningchoice')}>
