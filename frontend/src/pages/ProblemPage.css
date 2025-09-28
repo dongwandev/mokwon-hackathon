@@ -241,7 +241,8 @@ button:focus-visible {
 .option-radio:checked + .option--label .option-number {
   color: #fff;
 }
-.option-radio:checked + .option--label .option-number#correct {
+.option-radio:checked + .option--label .option-number#correct,
+.option-radio:checked + .option--label .option-number.radio {
   background: linear-gradient(180deg, var(--green-500), var(--green-600));
   border-color: var(--green-400);
 }

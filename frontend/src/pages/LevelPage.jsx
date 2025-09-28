@@ -49,7 +49,6 @@ export default function LevelPage() {
 
   // 초기 로드: 1) 문제 생성(덮어쓰기) → 2) 최신 questions.json 조회
   useEffect(() => {
-    console.log("초기 문제 생성 및 로드 시도");
     (async () => {
       try {
         setLoading(true);
